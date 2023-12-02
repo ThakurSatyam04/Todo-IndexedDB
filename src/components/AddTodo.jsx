@@ -4,7 +4,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 
-const AddTodo = ({ addingTodo, setAddingTodo, addUser, editUser,task,setTask,setDescription,description ,selectedTask,id,setCompletionDate,completiondate}) => {
+const AddTodo = ({ addingTodo, setAddingTodo, addUser, editUser,task,setTask,setDescription,description ,selectedTask,id,setCompletionDate,completiondate,priority}) => {
   useEffect(() => {
     createCollectionsInIndexdDB();
   });
@@ -56,6 +56,7 @@ const AddTodo = ({ addingTodo, setAddingTodo, addUser, editUser,task,setTask,set
             completiondate,
             due_date: new Date(),
             status: true,
+            priority: false,
           });
   
           datas.onsuccess = (query) => {
@@ -81,6 +82,7 @@ const AddTodo = ({ addingTodo, setAddingTodo, addUser, editUser,task,setTask,set
             completiondate,
             due_date: new Date(),
             status: true,
+            priority:false,
           });
   
           datas.onsuccess = (query) => {
@@ -119,8 +121,8 @@ const AddTodo = ({ addingTodo, setAddingTodo, addUser, editUser,task,setTask,set
   return (
     <div>
       {addingTodo ? (
-        <div className="absolute h-100 w-full flex items-center justify-center bg-teal-lightest font-sans">
-          <div className="relative bg-gray-300 rounded shadow p-6 m-4 w-full lg:w-7/12 lg:max-w-7/12">
+        <div className="absolute h-100 w-full flex items-center justify-center  font-sans">
+          <div className="relative bg-gray-300 rounded shadow p-6 m-4 w-full lg:w-7/12 lg:max-w-7/12 z-10">
             <button onClick={handleClose} className="absolute top-0 right-0 pr-2 font-bold text-2xl cursor-pointer ">X</button>
             <div className="mb-4">
               {
@@ -153,6 +155,7 @@ const AddTodo = ({ addingTodo, setAddingTodo, addUser, editUser,task,setTask,set
                  <label>Select Date: </label>
                     <DatePicker
                       className="shadow appearance-none border rounded py-2 px-3 mr-4 text-grey-darker"
+                      placeholderText="select date"
                       selected={completiondate}
                       onChange={ (date) => setCompletionDate(date) }
                       dateFormat="dd/MM/yyyy"

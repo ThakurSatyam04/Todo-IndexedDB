@@ -16,6 +16,7 @@ const Todos = () => {
     const [description, setDescription] = useState("");
     const [id,setId] = useState("");
     const [searchInput, setSearchInput] = useState("");
+    const [priority, setPriority] = useState(false);
 
     const getAllData = () => {
         const dbPromise = idb.open('todoDatabase', 3);
@@ -49,7 +50,9 @@ const Todos = () => {
         getAllData();
     },[])
 
-    const filteredTodos = allTodos.filter((todo) =>
+    const sortedTodos = allTodos.sort((a, b) => (b.priority || 0) - (a.priority || 0));
+
+    const filteredTodos = sortedTodos.filter((todo) =>
       todo.task.toLowerCase().includes(searchInput.toLowerCase()) ||
       todo.description.toLowerCase().includes(searchInput.toLowerCase())
   );
@@ -83,11 +86,11 @@ const Todos = () => {
           {
             searchInput ? (
               filteredTodos?.map((data) => (
-                <TodoTable key={data.id} data = {data} setEditUser={setEditUser} editUser={editUser} setAddingTodo={setAddingTodo} setSelectedTask={setSelectedTask} selectedTask={selectedTask} setTask={setTask} setDescription={setDescription} setId={setId} setAddUser={setAddUser} task={task} description={description}/>
+                <TodoTable key={data.id} data = {data} setEditUser={setEditUser} editUser={editUser} setAddingTodo={setAddingTodo} setSelectedTask={setSelectedTask} selectedTask={selectedTask} setTask={setTask} setDescription={setDescription} setId={setId} setAddUser={setAddUser} task={task} description={description} setPriority={setPriority} priority={priority}/>
               ))
             ):(
               allTodos?.map((data) => (
-                <TodoTable key={data.id} data = {data} setEditUser={setEditUser} editUser={editUser} setAddingTodo={setAddingTodo} setSelectedTask={setSelectedTask} selectedTask={selectedTask} completiondate={completiondate} setCompletionDate={setCompletionDate} setTask={setTask} setDescription={setDescription} setId={setId} setAddUser={setAddUser} task={task} description={description}/>     
+                <TodoTable key={data.id} data = {data} setEditUser={setEditUser} editUser={editUser} setAddingTodo={setAddingTodo} setSelectedTask={setSelectedTask} selectedTask={selectedTask} completiondate={completiondate} setCompletionDate={setCompletionDate} setTask={setTask} setDescription={setDescription} setId={setId} setAddUser={setAddUser} task={task} description={description} setPriority={setPriority} priority={priority}/>     
               ))
             )          
           }
