@@ -57,6 +57,37 @@ const Todos = () => {
       todo.description.toLowerCase().includes(searchInput.toLowerCase())
   );
 
+  const handleExportData = ()=>{
+    const dbPromise = idb.open('todoDatabase', 3);  
+  
+    dbPromise.onsuccess = (event) => {
+      const db = dbPromise.result;
+            const tx = db.transaction('todos', 'readonly');
+            const to = tx.objectStore('todos');
+            const data = to.getAll();
+
+      data.onsuccess = (query) => {
+        // setAllTodos(query.srcElement.result)
+        const jsonData = JSON.stringify(query.srcElement.result);
+
+      // Create a Blob
+        const blob = new Blob([jsonData], { type: 'application/json' });
+
+        // Create a downloadable link
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = 'exportedData.json';
+
+        // Trigger download
+        downloadLink.click();
+      };
+
+    dbPromise.onerror = (event) => {
+      console.error('Error opening IndexedDB:', event.target.error);
+    };
+    };      
+  }
+
   return (
     <>
       <div className='relative h-full top-40 left-auto w-full'>
@@ -79,6 +110,9 @@ const Todos = () => {
                 onChange={(e)=> setSearchInput(e.target.value)}
                 value={searchInput}
               />
+            </div>
+            <div>
+              <button onClick={handleExportData}>Download Task</button>
             </div>
           </div>
          
