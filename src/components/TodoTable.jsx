@@ -149,12 +149,11 @@ const TodoTable = ({data,editUser,setEditUser,setAddingTodo,setSelectedTask,sele
   })
 
   return (
-    <>      
-        <div className='w-[500px]'>
+    <div className='w-full sm:w-[510px] bg-slate-100 p-2 shadow-lg  rounded-md'>      
           {
             data.status === false ? 
             (
-              <div className="flex mb-4 items-center ">
+              <div className="flex  items-center ">
               <p className="w-full line-through  text-red-500">{data.task}</p>
               <button onClick={handleTaskComplete} className="p-2 ml-4 mr-2 border-2 rounded text-grey border-grey hover:bg-gray-500 hover:text-white whitespace-nowrap">Not Done</button>
               <button onClick={handleTaskRemove} className="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red  hover:bg-red-500 "><MdDelete /></button>
@@ -175,8 +174,7 @@ const TodoTable = ({data,editUser,setEditUser,setAddingTodo,setSelectedTask,sele
             )
           }
         <hr/>
-        </div>
-    </>
+    </div>
   )
 }
 

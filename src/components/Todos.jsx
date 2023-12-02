@@ -59,8 +59,8 @@ const Todos = () => {
       <div className='relative h-full top-40 left-auto w-full'>
         <AddTodo addingTodo={addingTodo} setAddingTodo={setAddingTodo} addUser= {addUser} editUser={editUser} setTask={setTask} task={task} setDescription={setDescription} description={description} selectedTask= {selectedTask} id={id} setCompletionDate={setCompletionDate} completiondate={completiondate}/>
       </div>
-      <div className='w-full flex flex-col justify-center flex-wrap items-center'>
-        <div className="h-100 w-full flex items-center justify-center bg-teal-lightest font-sans">
+      <div className='w-full flex justify-center flex-wrap items-center'>
+        <div className="h-100 w-full flex flex-col items-center justify-center bg-teal-lightest font-sans">
           <div className="bg-white rounded shadow p-6 m-4 w-full lg:w-3/4 lg:max-w-lg">
             <div className="mb-4 w-full flex justify-between items-center">
               <h1 className="text-grey-darkest font-semibold text-2xl">Todo List</h1>
@@ -78,20 +78,22 @@ const Todos = () => {
               />
             </div>
           </div>
-        </div>        
-        {
-          searchInput ? (
-            filteredTodos?.map((data) => (
-              <TodoTable key={data.id} data = {data} setEditUser={setEditUser} editUser={editUser} setAddingTodo={setAddingTodo} setSelectedTask={setSelectedTask} selectedTask={selectedTask} setTask={setTask} setDescription={setDescription} setId={setId} setAddUser={setAddUser} task={task} description={description}/>
-            ))
-          ):(
-            allTodos?.map((data) => (
-              <TodoTable key={data.id} data = {data} setEditUser={setEditUser} editUser={editUser} setAddingTodo={setAddingTodo} setSelectedTask={setSelectedTask} selectedTask={selectedTask} completiondate={completiondate} setCompletionDate={setCompletionDate} setTask={setTask} setDescription={setDescription} setId={setId} setAddUser={setAddUser} task={task} description={description}/>     
-            ))
-          )
-          
-        }
+         
+        <div className='ml-10 mr-10'>          
+          {
+            searchInput ? (
+              filteredTodos?.map((data) => (
+                <TodoTable key={data.id} data = {data} setEditUser={setEditUser} editUser={editUser} setAddingTodo={setAddingTodo} setSelectedTask={setSelectedTask} selectedTask={selectedTask} setTask={setTask} setDescription={setDescription} setId={setId} setAddUser={setAddUser} task={task} description={description}/>
+              ))
+            ):(
+              allTodos?.map((data) => (
+                <TodoTable key={data.id} data = {data} setEditUser={setEditUser} editUser={editUser} setAddingTodo={setAddingTodo} setSelectedTask={setSelectedTask} selectedTask={selectedTask} completiondate={completiondate} setCompletionDate={setCompletionDate} setTask={setTask} setDescription={setDescription} setId={setId} setAddUser={setAddUser} task={task} description={description}/>     
+              ))
+            )          
+          }
+        </div>   
       </div>
+    </div>    
       
     </>
   )
