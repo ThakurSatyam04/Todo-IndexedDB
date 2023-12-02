@@ -6,7 +6,7 @@ import Todos from './components/Todos';
 function App() {
 
   return (
-    <div>
+    <div className='select-none'>
       <AddTodo/>
       <Todos/>
     </div>

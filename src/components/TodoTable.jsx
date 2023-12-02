@@ -222,8 +222,8 @@ const TodoTable = ({data,editUser,setEditUser,setAddingTodo,setSelectedTask,sele
             (
               <div className="relative flex  items-center ">                
                 <p className="w-full line-through  text-red-500">{data.task}</p>
-                <button onClick={handleTaskComplete} className="p-2 ml-4 mr-2 border-2 rounded text-grey border-grey hover:bg-gray-500 hover:text-white whitespace-nowrap">Not Done</button>
-                <button onClick={handleTaskRemove} className="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red  hover:bg-red-500 "><MdDelete /></button>
+                <button onClick={handleTaskComplete} className="p-1 ml-4 mr-2 border-2 rounded text-grey border-grey hover:bg-gray-500 hover:text-white whitespace-nowrap mb-4">Not Done</button>
+                <button onClick={handleTaskRemove} className="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red  hover:bg-red-500 mb-4"><MdDelete /></button>
               </div>              
             )
             : 
