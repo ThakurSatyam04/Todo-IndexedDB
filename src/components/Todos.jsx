@@ -95,12 +95,15 @@ const Todos = () => {
       </div>
       <div className='w-full flex justify-center flex-wrap items-center'>
         <div className="h-100 w-full flex flex-col items-center justify-center bg-teal-lightest font-sans">
-          <div className="bg-white rounded shadow p-6 m-4 w-full lg:w-3/4 lg:max-w-lg">
+          <div className="relative bg-white rounded shadow p-6 m-4 w-full lg:w-3/4 lg:max-w-lg">
             <div className="mb-4 w-full flex justify-between items-center">
               <h1 className="text-grey-darkest font-semibold text-2xl">Todo List</h1>
-              <button onClick={handleAddingTodo} className="flex-no-shrink p-2 border-2 rounded text-teal border-teal  hover:bg-green-500">
-                  CREATE
-              </button>
+              <div className='flex gap-2'>
+                <button onClick={handleExportData}  className="flex-no-shrink p-1 border-2 rounded text-teal border-teal  hover:bg-green-500">Download Tasks</button>
+                <button onClick={handleAddingTodo} className="flex-no-shrink p-1 border-2 rounded text-teal border-teal  hover:bg-green-500">
+                    CREATE
+                </button>
+              </div>
             </div>
             <div className='w-8/12 m-auto'>
               <input 
@@ -110,9 +113,6 @@ const Todos = () => {
                 onChange={(e)=> setSearchInput(e.target.value)}
                 value={searchInput}
               />
-            </div>
-            <div>
-              <button onClick={handleExportData}>Download Task</button>
             </div>
           </div>
          
