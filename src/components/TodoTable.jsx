@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 
-const TodoTable = ({data,editUser,setEditUser,setAddingTodo,setSelectedTask,selectedTask,setTask, setDescription,completiondate,setId,setAddUser,id,task,description,setCompletionDate,setPriority,priority}) => {
+const TodoTable = ({data,editUser,setEditUser,setAddingTodo,setSelectedTask,selectedTask,setTask, setDescription,completiondate,setId,setAddUser,id,task,description,setCompletionDate,setPriority,priority,setSelectedFile,selectedFile}) => {
 
   const idb =
     window.indexedDB ||
@@ -143,7 +143,6 @@ const TodoTable = ({data,editUser,setEditUser,setAddingTodo,setSelectedTask,sele
   const handlePriorityChange = (e)=>{
     setPriority(e.target.checked);
     setSelectedTask(data)
-    console.log(data.id)
 
     const dbPromise = idb.open("todoDatabase", 3);
     
@@ -205,7 +204,7 @@ const TodoTable = ({data,editUser,setEditUser,setAddingTodo,setSelectedTask,sele
       };  
 
     }
-  }
+  }  
   
   useEffect(()=>{
     getAllData();
@@ -241,7 +240,12 @@ const TodoTable = ({data,editUser,setEditUser,setAddingTodo,setSelectedTask,sele
                 <div className="w-full text-grey-darkest">
                   <p className="text-grey-darkest">{data.task}</p>
                   <p className='text-gray-500'>{data.description}</p> 
-                  <p>Due Date: {format(data.completiondate, 'dd/MM/yyyy')}</p>
+                  <p className='text-sm'>Due Date: {format(data.completiondate, 'dd/MM/yyyy')}</p>
+                  {
+                    data.selectedFile ? (
+                      <button>File Attached</button>
+                    ):""
+                  }
                 </div>
                 <button onClick={handleTaskComplete} className="flex-no-shrink p-1 ml-4 mr-2 border-2 rounded  text-green border-green hover:bg-green-500 mt-4">Done</button>
                 <button onClick={handleEdit} className="p-2 ml-4 mr-2 border-2 rounded text-grey border-grey hover:bg-gray-500 hover:text-white whitespace-nowrap mt-4"><FaEdit /></button>

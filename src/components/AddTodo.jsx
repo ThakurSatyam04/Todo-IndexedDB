@@ -4,7 +4,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 
-const AddTodo = ({ addingTodo, setAddingTodo, addUser, editUser,task,setTask,setDescription,description ,selectedTask,id,setCompletionDate,completiondate,priority}) => {
+const AddTodo = ({ addingTodo, setAddingTodo, addUser, editUser,task,setTask,setDescription,description ,selectedTask,id,setCompletionDate,completiondate,priority,setSelectedFile,selectedFile}) => {
   useEffect(() => {
     createCollectionsInIndexdDB();
   });
@@ -54,6 +54,7 @@ const AddTodo = ({ addingTodo, setAddingTodo, addUser, editUser,task,setTask,set
             task,
             description,
             completiondate,
+            selectedFile,
             due_date: new Date(),
             status: true,
             priority: false,
@@ -80,6 +81,7 @@ const AddTodo = ({ addingTodo, setAddingTodo, addUser, editUser,task,setTask,set
             task,
             description,
             completiondate,
+            selectedFile,
             due_date: new Date(),
             status: true,
             priority:false,
@@ -113,6 +115,11 @@ const AddTodo = ({ addingTodo, setAddingTodo, addUser, editUser,task,setTask,set
     setDescription("");
     setCompletionDate(null);
   }
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setSelectedFile(file);
+  };
 
   useEffect(() => {
     getAllData();
@@ -162,6 +169,8 @@ const AddTodo = ({ addingTodo, setAddingTodo, addUser, editUser,task,setTask,set
                       showYearDropdown
                       scrollableYearDropdown
                     />
+
+                    <input type="file" onChange={handleFileChange}/>
                 <button
                   className="flex-no-shrink p-2 border-2 rounded text-teal border-teal  hover:bg-teal w-fit m-auto hover:bg-green-500"
                   type="submit"

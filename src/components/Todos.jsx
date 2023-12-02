@@ -17,6 +17,7 @@ const Todos = () => {
     const [id,setId] = useState("");
     const [searchInput, setSearchInput] = useState("");
     const [priority, setPriority] = useState(false);
+    const [selectedFile, setSelectedFile] = useState(null);
 
     const getAllData = () => {
         const dbPromise = idb.open('todoDatabase', 3);
@@ -91,7 +92,7 @@ const Todos = () => {
   return (
     <>
       <div className='relative h-full top-40 left-auto w-full'>
-        <AddTodo addingTodo={addingTodo} setAddingTodo={setAddingTodo} addUser= {addUser} editUser={editUser} setTask={setTask} task={task} setDescription={setDescription} description={description} selectedTask= {selectedTask} id={id} setCompletionDate={setCompletionDate} completiondate={completiondate}/>
+        <AddTodo addingTodo={addingTodo} setAddingTodo={setAddingTodo} addUser= {addUser} editUser={editUser} setTask={setTask} task={task} setDescription={setDescription} description={description} selectedTask= {selectedTask} id={id} setCompletionDate={setCompletionDate} completiondate={completiondate} setSelectedFile={setSelectedFile} selectedFile={selectedFile}/>
       </div>
       <div className='w-full flex justify-center flex-wrap items-center'>
         <div className="h-100 w-full flex flex-col items-center justify-center bg-teal-lightest font-sans">
@@ -120,11 +121,11 @@ const Todos = () => {
           {
             searchInput ? (
               filteredTodos?.map((data) => (
-                <TodoTable key={data.id} data = {data} setEditUser={setEditUser} editUser={editUser} setAddingTodo={setAddingTodo} setSelectedTask={setSelectedTask} selectedTask={selectedTask} setTask={setTask} setDescription={setDescription} setId={setId} setAddUser={setAddUser} task={task} description={description} setPriority={setPriority} priority={priority}/>
+                <TodoTable key={data.id} data = {data} setEditUser={setEditUser} editUser={editUser} setAddingTodo={setAddingTodo} setSelectedTask={setSelectedTask} selectedTask={selectedTask} setTask={setTask} setDescription={setDescription} setId={setId} setAddUser={setAddUser} task={task} description={description} setPriority={setPriority} priority={priority} setSelectedFile={setSelectedFile} selectedFile={selectedFile}/>
               ))
             ):(
               allTodos?.map((data) => (
-                <TodoTable key={data.id} data = {data} setEditUser={setEditUser} editUser={editUser} setAddingTodo={setAddingTodo} setSelectedTask={setSelectedTask} selectedTask={selectedTask} completiondate={completiondate} setCompletionDate={setCompletionDate} setTask={setTask} setDescription={setDescription} setId={setId} setAddUser={setAddUser} task={task} description={description} setPriority={setPriority} priority={priority}/>     
+                <TodoTable key={data.id} data = {data} setEditUser={setEditUser} editUser={editUser} setAddingTodo={setAddingTodo} setSelectedTask={setSelectedTask} selectedTask={selectedTask} completiondate={completiondate} setCompletionDate={setCompletionDate} setTask={setTask} setDescription={setDescription} setId={setId} setAddUser={setAddUser} task={task} description={description} setPriority={setPriority} priority={priority} setSelectedFile={setSelectedFile} selectedFile={selectedFile}/>     
               ))
             )          
           }
