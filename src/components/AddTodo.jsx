@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import createCollectionsInIndexdDB from "../indexDB/database";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
-const AddTodo = ({ addingTodo, setAddingTodo }) => {
+
+const AddTodo = ({ addingTodo, setAddingTodo, addUser, editUser,task,setTask,setDescription,description ,selectedTask,id,setCompletionDate,completiondate}) => {
   useEffect(() => {
     createCollectionsInIndexdDB();
   });
@@ -14,10 +17,6 @@ const AddTodo = ({ addingTodo, setAddingTodo }) => {
     window.shimIndexedDB;
 
   const [allTasks, setAllTasks] = useState([]);
-  const [task, setTask] = useState("");
-  const [description, setDescription] = useState("");
-
-  const [editId, setEditId] = useState(null);
 
   const getAllData = () => {
     const dbPromise = idb.open("todoDatabase", 3);
@@ -37,9 +36,8 @@ const AddTodo = ({ addingTodo, setAddingTodo }) => {
     };
   };
 
-  const handleAddTodo = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("button hit");
 
     const dbPromise = idb.open("todoDatabase", 3);
 
@@ -50,55 +48,68 @@ const AddTodo = ({ addingTodo, setAddingTodo }) => {
         var tx = db.transaction("todos", "readwrite");
         var data = tx.objectStore("todos");
 
-        const users = data.put({
-          id: allTasks?.length + 1,
-          task,
-          description,
-          due_date: new Date(),
-          status: true,
-        });
-
-        users.onsuccess = (query) => {
-          tx.oncomplete = function () {
-            db.close();
+        if(addUser){
+          const datas = data.put({
+            id: Math.random().toString(),
+            task,
+            description,
+            completiondate,
+            due_date: new Date(),
+            status: true,
+          });
+  
+          datas.onsuccess = (query) => {
+            tx.oncomplete = function () {
+              db.close();
+            };
+            console.log("success");
+            window.location.reload();
+            alert("Todo added!");
+            // getAllData();
+            handleClose();
           };
-          console.log("success");
-          alert("Todo added!");
-          getAllData();
-        };
-
-        users.onerror = (error) => {
-          console.log("error is ", error);
-        };
+  
+          datas.onerror = (error) => {
+            console.log("error is ", error);
+          };
+        }
+        else{
+          const datas = data.put({
+            id: selectedTask.id,
+            task,
+            description,
+            completiondate,
+            due_date: new Date(),
+            status: true,
+          });
+  
+          datas.onsuccess = (query) => {
+            tx.oncomplete = function () {
+              db.close();
+            };
+            console.log("success");
+            window.location.reload();
+            alert("Todo edited!");
+            setTask("");
+            setDescription("");
+            setCompletionDate("");
+            // getAllData();
+            handleClose();
+          };
+  
+          datas.onerror = (error) => {
+            console.log("error is ", error);
+          };
+        }
       };
     }
   };
 
-  // const handleEditTodo = (id) => {
-  //   if (editId !== null) {
-  //       setEditId(id)
-  //       const dbPromise = idb.open('todoDatabase', 3);
-
-  //       dbPromise.onsuccess = () => {
-  //         const db = dbPromise.result;
-  //         const tx = db.transaction('todos', 'readonly');
-  //         const data = tx.objectStore('todos');
-  //         const request = data.get(editId);
-
-  //         request.onsuccess = () => {
-  //           const todoToEdit = request.result;
-  //           setTodo(todoToEdit.task || ''); // Set the todo text in the input field
-  //         };
-
-  //         request.onerror = (err) => {
-  //           console.error(err);
-  //         };
-  //       };
-  //     }
-  // }
-
   const handleClose = ()=>{
     setAddingTodo(!addingTodo)
+    setTask("");
+    setDescription("");
+    setCompletionDate(null);
   }
 
   useEffect(() => {
@@ -112,9 +123,15 @@ const AddTodo = ({ addingTodo, setAddingTodo }) => {
           <div className="relative bg-gray-300 rounded shadow p-6 m-4 w-full lg:w-7/12 lg:max-w-7/12">
             <button onClick={handleClose} className="absolute top-0 right-0 pr-2 font-bold text-2xl cursor-pointer ">X</button>
             <div className="mb-4">
-              <h1 className="text-grey-darkest font-semibold">Add Todo +</h1>
+              {
+                !editUser? (
+                  <h1 className="text-grey-darkest font-semibold">Add Todo +</h1>
+                ):(
+                  <h1 className="text-grey-darkest font-semibold">Update Todo</h1>
+                )
+              }              
               <form
-                onSubmit={handleAddTodo}
+                onSubmit={handleSubmit}
                 className="flex flex-col gap-5 mt-4"
               >
                 <input
@@ -133,11 +150,20 @@ const AddTodo = ({ addingTodo, setAddingTodo }) => {
                   onChange={(e) => setDescription(e.target.value)}
                   value={description}
                 />
+                 <label>Select Date: </label>
+                    <DatePicker
+                      className="shadow appearance-none border rounded py-2 px-3 mr-4 text-grey-darker"
+                      selected={completiondate}
+                      onChange={ (date) => setCompletionDate(date) }
+                      dateFormat="dd/MM/yyyy"
+                      showYearDropdown
+                      scrollableYearDropdown
+                    />
                 <button
                   className="flex-no-shrink p-2 border-2 rounded text-teal border-teal  hover:bg-teal w-fit m-auto hover:bg-green-500"
                   type="submit"
                 >
-                  {editId !== null ? "UPDATE" : "ADD"}
+                  {editUser ? "UPDATE" : "ADD"}
                 </button>
               </form>
             </div>

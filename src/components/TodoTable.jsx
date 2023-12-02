@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
+import { format } from 'date-fns';
+import { MdDelete } from "react-icons/md";
+import { FaEdit } from "react-icons/fa";
 
-const TodoTable = ({data}) => {
+const TodoTable = ({data,editUser,setEditUser,setAddingTodo,setSelectedTask,selectedTask,setTask, setDescription,completiondate,setId,setAddUser,id,task,description,setCompletionDate}) => {
 
   const idb =
     window.indexedDB ||
@@ -11,6 +14,7 @@ const TodoTable = ({data}) => {
 
   const [allTasks, setAllTasks] = useState([]);
   const [isData, setIsData] = useState([]);
+  const [taskCompleted, setTaskCompleted] = useState(`${isData.status}`);
 
   const datas = function(){ 
     allTasks.map((data)=>(
@@ -35,17 +39,107 @@ const TodoTable = ({data}) => {
       };
     };
   };
-  const [taskCompleted, setTaskCompleted] = useState(`${isData.status}`);
+ 
 
   const handleTaskComplete = () =>{
     setTaskCompleted(!taskCompleted);
+    setSelectedTask(data)
+    console.log(data.id)
+
+    const dbPromise = idb.open("todoDatabase", 3);
+    
+    dbPromise.onsuccess = () => {
+      const db = dbPromise.result;
+    
+      var tx = db.transaction("todos", "readwrite");
+      var taskdata = tx.objectStore("todos"); 
+
+      const getRequest = taskdata.get(data.id);
+      
+      getRequest.onsuccess = (event) => {
+        const existingTodo = event.target.result;
+      
+        if (existingTodo.status === false) {
+          // Existing todo found, you can now update it
+          existingTodo.status = true;
+      
+          const updateRequest = taskdata.put(existingTodo);
+      
+          updateRequest.onsuccess = () => {
+            tx.oncomplete = function () {
+              db.close();
+            };
+            console.log("Status updated:", existingTodo);
+            window.location.reload();
+      
+            alert("Todo marked as not done!");
+            // getAllData();
+          };
+      
+          updateRequest.onerror = (error) => {
+            console.log("Error updating status:", error);
+          };
+        } else {
+          existingTodo.status = false;
+      
+          const updateRequest = taskdata.put(existingTodo);
+      
+          updateRequest.onsuccess = () => {
+            tx.oncomplete = function () {
+              db.close();
+            };
+            console.log("Status updated:", existingTodo);
+            window.location.reload();
+            alert("Todo marked as done!");
+            // getAllData();
+          };
+      
+          updateRequest.onerror = (error) => {
+            console.log("Error updating status:", error);
+          };
+          
+        }
+      };
+      
+      getRequest.onerror = (error) => {
+        console.log("Error fetching todo:", error);
+      };  
+
+    }
   }
 
-  const handleTaskRemove = () =>{
-  } 
+  const handleTaskRemove = () => {
+    const dbPromise = idb.open("todoDatabase", 3);
 
+    dbPromise.onsuccess = function () {
+      const db = dbPromise.result;
+      var tx = db.transaction("todos", "readwrite");
+      var deletedTodo = tx.objectStore("todos");
+      const deleteTodo = deletedTodo.delete(data.id);
+
+      deleteTodo.onsuccess = (query) => {
+        tx.oncomplete = function () {
+          db.close();
+        };
+        alert("Todo deleted!");
+      };
+      getAllData();
+      window.location.reload();
+    };
+  };
+
+  const handleEdit = () => {
+    setSelectedTask(data)
+    setId(selectedTask.id)
+    setEditUser(true)
+    setAddingTodo(true)
+    setAddUser(false);
+    setTask(data.task)
+    setDescription(data.description)
+    setCompletionDate(data.completiondate)
+
+  }
   
-
   useEffect(()=>{
     getAllData();
   },[])
@@ -58,25 +152,29 @@ const TodoTable = ({data}) => {
     <>      
         <div className='w-[500px]'>
           {
-            taskCompleted? 
+            data.status === false ? 
             (
-            <div className="flex mb-4 items-center">
-              <div className="w-full text-grey-darkest">
-                <p className="text-grey-darkest">{data.task}</p>
-                <p className='text-gray-500'>{data.description}</p> 
+              <div className="flex mb-4 items-center ">
+              <p className="w-full line-through  text-red-500">{data.task}</p>
+              <button onClick={handleTaskComplete} className="p-2 ml-4 mr-2 border-2 rounded text-grey border-grey hover:bg-gray-500 hover:text-white whitespace-nowrap">Not Done</button>
+              <button onClick={handleTaskRemove} className="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red  hover:bg-red-500 "><MdDelete /></button>
+              </div>              
+            )
+            : 
+            (
+              <div className="flex mb-4 items-center">
+                <div className="w-full text-grey-darkest">
+                  <p className="text-grey-darkest">{data.task}</p>
+                  <p className='text-gray-500'>{data.description}</p> 
+                  <p>Due Date: {format(data.completiondate, 'dd/MM/yyyy')}</p>
+                </div>
+                <button onClick={handleTaskComplete} className="flex-no-shrink p-1 ml-4 mr-2 border-2 rounded  text-green border-green hover:bg-green-500">Done</button>
+                <button onClick={handleEdit} className="p-2 ml-4 mr-2 border-2 rounded text-grey border-grey hover:bg-gray-500 hover:text-white whitespace-nowrap"><FaEdit /></button>
+                <button onClick={handleTaskRemove} className="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red  hover:bg-red-500"><MdDelete /></button>
               </div>
-              <button onClick={handleTaskComplete} className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded  text-green border-green hover:bg-green-500">Done</button>
-              <button onClick={handleTaskRemove} className="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red  hover:bg-red-500">Remove</button>
-        </div>)
-            :
-            (<div className="flex mb-4 items-center ">
-            <p className="w-full line-through  text-red-500">{data.task}</p>
-            <button onClick={handleTaskComplete} className="p-2 ml-4 mr-2 border-2 rounded text-grey border-grey hover:bg-gray-500 hover:text-white whitespace-nowrap">Not Done</button>
-            <button onClick={handleTaskRemove} className="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red  hover:bg-red-500 ">Remove</button>
-        </div>)
+            )
           }
-            
-          	
+        <hr/>
         </div>
     </>
   )
