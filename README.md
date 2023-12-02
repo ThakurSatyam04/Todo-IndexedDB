@@ -6,7 +6,7 @@ In the project directory, you can run:
 
 ### `Clone this repository to you system`
 
-git clone 
+git clone https://github.com/ThakurSatyam04/Todo-IndexedDB.git
 
 ### `npm start`
 
