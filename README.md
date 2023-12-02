@@ -1,5 +1,9 @@
 # Getting Started with TODO app with IndexedDB
 
+### Deployed app on vercel
+
+https://todo-indexed-db.vercel.app/
+
 ## Available Scripts
 
 In the project directory, you can run:
